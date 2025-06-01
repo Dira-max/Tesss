@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Top Up Game DiraShop</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f7f7f7;
+      padding: 20px;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .game-buttons button {
+      margin: 5px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      background-color: #eee;
+      cursor: pointer;
+    }
+    .game-buttons .active {
+      background-color: #4f46e5;
+      color: white;
+    }
+    input, select {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    .nominals button {
+      margin: 5px 5px 0 0;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+    .nominals .selected {
+      background-color: #4f46e5;
+      color: white;
+    }
+    button#submitBtn {
+      margin-top: 20px;
+      width: 100%;
+      background-color: #16a34a;
+      color: white;
+      border: none;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Top Up Game DiraShop</h1>
+
+    <div class="game-buttons">
+      <button class="game active" data-game="ff">Free Fire</button>
+      <button class="game" data-game="ml">Mobile Legends</button>
+      <button class="game" data-game="pubg">PUBG Mobile</button>
+    </div>
+
+    <input type="text" id="userId" placeholder="Masukkan User ID" />
+    <input type="text" id="serverId" placeholder="Masukkan Server ID (jika ada)" />
+
+    <div>
+      <label for="nominal">Pilih Nominal:</label>
+      <div class="nominals" id="nominalOptions"></div>
+    </div>
+
+    <label for="payment">Metode Pembayaran:</label>
+    <select id="payment">
+      <option value="">-- Pilih Pembayaran --</option>
+      <option value="">-- OVO 085822309902 --</option>
+       <option value="">-- Dana 085822309902 --</option>
+       <option value="">-- Gopay 085822309902 --</option>
+    </select>
+
+    <button id="submitBtn">Bayar Sekarang</button>
+  </div>
+
+  <script>
+    const nominalData = {
+      ff: ["70 Diamonds", "140 Diamonds", "355 Diamonds"],
+      ml: ["86 Diamonds", "172 Diamonds", "344 Diamonds"],
+      pubg: ["60 UC", "180 UC", "600 UC"]
+    };
+
+    let selectedGame = "ff";
+    let selectedNominal = "";
+
+    const gameButtons = document.querySelectorAll(".game");
+    const nominalContainer = document.getElementById("nominalOptions");
+    const submitBtn = document.getElementById("submitBtn");
+
+    function renderNominals(game) {
+      nominalContainer.innerHTML = "";
+      nominalData[game].forEach(nom => {
+        const btn = document.createElement("button");
+        btn.textContent = nom;
+        btn.onclick = () => {
+          document.querySelectorAll(".nominals button").forEach(b => b.classList.remove("selected"));
+          btn.classList.add("selected");
+          selectedNominal = nom;
+        };
+        nominalContainer.appendChild(btn);
+      });
+    }
+
+    gameButtons.forEach(button => {
+      button.onclick = () => {
+        gameButtons.forEach(b => b.classList.remove("active"));
+        button.classList.add("active");
+        selectedGame = button.getAttribute("data-game");
+        renderNominals(selectedGame);
+      };
+    });
+
+    submitBtn.onclick = () => {
+      const userId = document.getElementById("userId").value;
+      const serverId = document.getElementById("serverId").value;
+      const payment = document.getElementById("payment").value;
+
+      if (!userId || !selectedNominal || !payment) {
+        alert("Mohon lengkapi semua data.");
+        return;
+      }
+
+      alert(`Top Up ${selectedNominal} untuk ${selectedGame.toUpperCase()} oleh ID ${userId} (${serverId}) via ${payment}`);
+    };
+
+    // Inisialisasi pertama
+    renderNominals(selectedGame);
+  </script>
+</body>
+</html>
